@@ -1,0 +1,58 @@
+# =========================
+# .NET / Blazor
+# =========================
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider / VS Code / VS
+.vs/
+.vscode/
+.idea/
+
+# =========================
+# ASP.NET Core
+# =========================
+appsettings.Development.json
+appsettings.Local.json
+
+# =========================
+# Build outputs
+# =========================
+wwwroot/dist/
+wwwroot/css/output.css
+wwwroot/css/*.map
+
+# =========================
+# Tailwind / Node
+# =========================
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Tailwind cache
+.tailwindcss/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+
+# =========================
+# Env
+# =========================
+.env
+.env.local
+.env.development
+.env.production

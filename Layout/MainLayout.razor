@@ -1,0 +1,107 @@
+﻿@inherits LayoutComponentBase
+
+@code {
+    bool SidebarOpen;
+    bool EcommerceOpen;
+
+    void ToggleSidebar() => SidebarOpen = !SidebarOpen;
+    void CloseSidebar() => SidebarOpen = false;
+    void ToggleEcommerce() => EcommerceOpen = !EcommerceOpen;
+}
+
+<div class="page">
+
+    <button type="button"
+            class="text-heading rounded-base ms-3 mt-3 box-border inline-flex border border-transparent bg-transparent p-2 text-sm font-medium leading-5 hover:bg-neutral-secondary-medium focus:ring-neutral-tertiary focus:outline-none focus:ring-4 sm:hidden"
+            @onclick="ToggleSidebar">
+
+        <span class="sr-only">Open sidebar</span>
+        <svg class="h-6 w-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 24 24" fill="none">
+            <path stroke="currentColor" stroke-linecap="round" stroke-width="2"
+                  d="M5 7h14M5 12h14M5 17h10" />
+        </svg>
+    </button>
+
+    <aside class="fixed left-0 top-0 z-40 h-screen w-64 transition-transform
+        @(SidebarOpen ? "translate-x-0" : "-translate-x-full")
+        sm:translate-x-0"
+           aria-label="Sidebar">
+
+        <div class="bg-neutral-primary-soft border-default h-full overflow-y-auto border-e px-3 py-4">
+            <a href="https://flowbite.com/" class="mb-5 flex items-center ps-2.5">
+         <img src="https://flowbite.com/docs/images/logo.svg" class="me-3 h-6" alt="Flowbite Logo" />
+         <span class="text-heading self-center whitespace-nowrap text-lg font-semibold">Panasonic</span>
+      </a>
+            <ul class="space-y-2 font-medium">
+
+                <li>
+                    <a class="text-body rounded-base group flex items-center px-2 py-1.5 hover:bg-neutral-tertiary hover:text-fg-brand">
+                        <svg class="h-5 w-5 transition duration-75 group-hover:text-fg-brand"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2"
+                                  d="M10 6.025A7.5 7.5 0 1 0 17.975 14H10Z" />
+                        </svg>
+                        <span class="ms-3">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <button type="button"
+                            class="text-body rounded-base group flex w-full items-center justify-between px-2 py-1.5 hover:bg-neutral-tertiary hover:text-fg-brand"
+                            @onclick="ToggleEcommerce">
+
+                        <svg class="h-5 w-5 shrink-0 transition duration-75 group-hover:text-fg-brand"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2"
+                                  d="M5 4h1.5L9 16h8" />
+                        </svg>
+
+                        <span class="ms-3 flex-1 whitespace-nowrap text-left">E-commerce</span>
+
+                        <svg class="h-5 w-5 transition-transform @(EcommerceOpen ? "rotate-180" : "")"
+                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+                            <path stroke="currentColor" stroke-width="2"
+                                  d="m19 9-7 7-7-7" />
+                        </svg>
+                    </button>
+
+                    @if (EcommerceOpen)
+                    {
+                        <ul class="space-y-2 py-2">
+                            <li>
+                                <a class="text-body rounded-base group flex items-center px-2 py-1.5 pl-10 hover:bg-neutral-tertiary hover:text-fg-brand">
+                                    Products
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-body rounded-base group flex items-center px-2 py-1.5 pl-10 hover:bg-neutral-tertiary hover:text-fg-brand">
+                                    Billing
+                                </a>
+                            </li>
+                            <li>
+                                <a class="text-body rounded-base group flex items-center px-2 py-1.5 pl-10 hover:bg-neutral-tertiary hover:text-fg-brand">
+                                    Invoice
+                                </a>
+                            </li>
+                        </ul>
+                    }
+                </li>
+
+            </ul>
+        </div>
+    </aside>
+
+    @if (SidebarOpen)
+    {
+        <div class="fixed inset-0 z-30 bg-black/30 sm:hidden"
+             @onclick="CloseSidebar"></div>
+    }
+
+    <div class="p-4 sm:ml-64">
+        <article class="content px-4">
+            @Body
+        </article>
+    </div>
+
+</div>
