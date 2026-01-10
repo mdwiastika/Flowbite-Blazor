@@ -1,0 +1,74 @@
+﻿@inject NavigationManager Nav
+@using static BlazorApp2.Components.Navigation.Sidebar.SidebarDropdown
+
+<aside class="fixed left-0 top-0 z-40 h-screen w-64 transition-transform
+        @(IsOpen ? "translate-x-0" : "-translate-x-full")
+        sm:translate-x-0"
+       aria-label="Sidebar">
+
+    <div class="bg-neutral-primary-soft border-default h-full overflow-y-auto border-e px-3 py-4">
+
+        <SidebarHeader />
+
+        <ul class="space-y-2 font-medium">
+
+            <SidebarItem Href="/"
+                         Match="NavLinkMatch.All"
+                         IconSvg="@Icons.Home"
+                         Label="Dashboard" />
+
+            @foreach (var menu in _dropdownMenus)
+            {
+                <SidebarDropdown Key="@menu.Key"
+                                 Title="@menu.Title"
+                                 Prefix="@menu.Prefix"
+                                 IconSvg="@menu.IconSvg"
+                                 Items="@menu.Items"
+                                 IsOpen="@IsMenuOpen(menu.Key)"
+                                 OnToggle="ToggleMenu" />
+            }
+
+            <SidebarItem Href="/logout"
+                         IconSvg="@Icons.Logout"
+                         Label="Logout"
+                         AdditionalClass="text-red-500" />
+
+        </ul>
+    </div>
+</aside>
+
+@code {
+    string? _openMenuKey;
+    List<DropdownMenuConfig> _dropdownMenus = new();
+
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+
+    protected override void OnInitialized()
+    {
+        _dropdownMenus = SidebarConfig.GetDropdownMenus();
+        InitializeOpenMenu();
+    }
+
+    void InitializeOpenMenu()
+    {
+        var path = Nav.ToBaseRelativePath(Nav.Uri);
+
+        foreach (var menu in _dropdownMenus)
+        {
+            if (path.StartsWith(menu.Prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                _openMenuKey = menu.Key;
+                break;
+            }
+        }
+    }
+
+    void ToggleMenu(string key)
+    {
+        _openMenuKey = _openMenuKey == key ? null : key;
+    }
+
+    bool IsMenuOpen(string key)
+        => _openMenuKey == key;
+}

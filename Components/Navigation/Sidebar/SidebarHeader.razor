@@ -1,0 +1,10 @@
+﻿<a href="@HomeUrl" class="mb-5 flex items-center ps-2.5">
+    <img src="@LogoUrl" class="me-3 h-6" alt="@AppName" />
+    <span class="text-heading text-lg font-semibold">@AppName</span>
+</a>
+
+@code {
+    [Parameter] public string HomeUrl { get; set; } = "/";
+    [Parameter] public string LogoUrl { get; set; } = "https://flowbite.com/docs/images/logo.svg";
+    [Parameter] public string AppName { get; set; } = "Panasonic";
+}

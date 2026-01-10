@@ -1,0 +1,25 @@
+﻿<li>
+    <NavLink href="@Href"
+             Match="@Match"
+             class="@GetCssClass()"
+             ActiveClass="bg-neutral-tertiary text-fg-brand font-semibold">
+        @((MarkupString)IconSvg)
+        <span class="ms-3">@Label</span>
+    </NavLink>
+</li>
+
+@code {
+    [Parameter] public string Href { get; set; } = "/";
+    [Parameter] public string Label { get; set; } = "";
+    [Parameter] public string IconSvg { get; set; } = "";
+    [Parameter] public NavLinkMatch Match { get; set; } = NavLinkMatch.Prefix;
+    [Parameter] public string AdditionalClass { get; set; } = "";
+
+    string GetCssClass()
+    {
+        var baseClass = "text-body rounded-base group flex items-center px-2 py-1.5 hover:bg-neutral-tertiary hover:text-fg-brand";
+        return string.IsNullOrWhiteSpace(AdditionalClass)
+            ? baseClass
+            : $"{baseClass} {AdditionalClass}";
+    }
+}

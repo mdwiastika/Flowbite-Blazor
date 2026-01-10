@@ -1,0 +1,71 @@
+﻿@inject NavigationManager Nav
+
+<li>
+    <button class="text-body rounded-base group flex w-full cursor-pointer items-center justify-between px-2 py-1.5
+                   @(IsOpen ? "bg-neutral-tertiary text-fg-brand font-semibold" : "hover:bg-neutral-tertiary hover:text-fg-brand")"
+            @onclick="Toggle">
+
+        <div class="flex items-center">
+            @((MarkupString)IconSvg)
+            <span class="ms-3">@Title</span>
+        </div>
+
+        <svg class="h-4 w-4 transition-transform @(IsOpen ? "rotate-180" : "")"
+             viewBox="0 0 24 24" fill="none">
+            <path stroke="currentColor" stroke-width="2"
+                  d="m19 9-7 7-7-7" />
+        </svg>
+    </button>
+
+    @if (IsOpen)
+    {
+        <ul class="mt-1 space-y-1">
+            @foreach (var item in Items)
+            {
+                <li>
+                    <NavLink href="@item.Href"
+                             class="text-body rounded-base group flex cursor-pointer items-center px-2 py-1.5 pl-10 hover:bg-neutral-tertiary hover:text-fg-brand"
+                             ActiveClass="bg-neutral-tertiary text-fg-brand font-semibold">
+                        @item.Label
+                    </NavLink>
+                </li>
+            }
+        </ul>
+    }
+</li>
+
+@code {
+    [Parameter] public string Key { get; set; } = "";
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Prefix { get; set; } = "";
+    [Parameter] public string IconSvg { get; set; } = "";
+    [Parameter] public List<SidebarMenuItem> Items { get; set; } = new();
+    [Parameter] public EventCallback<string> OnToggle { get; set; }
+    [Parameter] public bool IsOpen { get; set; }
+
+    bool IsActiveStartsWith()
+    {
+        var current = Nav.ToBaseRelativePath(Nav.Uri);
+        return current.StartsWith(Prefix.TrimStart('/'), StringComparison.OrdinalIgnoreCase);
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Auto-open jika ada submenu yang aktif
+        if (!IsOpen && IsActiveStartsWith())
+        {
+            IsOpen = true;
+        }
+    }
+
+    async Task Toggle()
+    {
+        await OnToggle.InvokeAsync(Key);
+    }
+
+    public class SidebarMenuItem
+    {
+        public string Href { get; set; } = "";
+        public string Label { get; set; } = "";
+    }
+}
