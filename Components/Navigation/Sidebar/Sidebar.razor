@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager Nav
 @using static BlazorApp2.Components.Navigation.Sidebar.SidebarDropdown
 
-<aside class="fixed left-0 top-0 z-40 h-screen w-64 transition-transform
+<aside class="fixed top-0 left-0 z-40 h-screen w-64 transition-transform
         @(IsOpen ? "translate-x-0" : "-translate-x-full")
         sm:translate-x-0"
        aria-label="Sidebar">
@@ -28,7 +28,7 @@
                                  OnToggle="ToggleMenu" />
             }
 
-            <SidebarItem Href="/logout"
+            <SidebarItem Href="/auth/login"
                          IconSvg="@Icons.Logout"
                          Label="Logout"
                          AdditionalClass="text-red-500" />

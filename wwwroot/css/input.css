@@ -41,3 +41,8 @@
 body {
     font-family: 'Outfit', system-ui, sans-serif;
 }
+
+:root {
+    --panasonic: #0F5BAB;
+    --panasonic-dark: #0D4F96;
+}

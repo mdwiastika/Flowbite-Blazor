@@ -4,6 +4,7 @@
     "tailwindcss": "^4.1.18"
   },
   "dependencies": {
-    "flowbite": "^4.0.1"
+    "flowbite": "^4.0.1",
+    "simple-datatables": "^10.2.0"
   }
 }

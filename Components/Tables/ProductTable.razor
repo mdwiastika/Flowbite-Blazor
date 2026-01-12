@@ -1,0 +1,119 @@
+﻿@using BlazorApp2.Models
+@using BlazorApp2.Utils
+@using System.Linq
+
+<div class="rounded-lg border border-neutral-200 bg-white p-4">
+
+    <div class="mb-4 flex flex-col gap-4 sm:flex-row sm:justify-between">
+        <input class="w-full rounded-lg border px-3 py-2 text-sm sm:w-64"
+               placeholder="Search..."
+               @bind="globalSearch" />
+
+        <div class="flex items-center gap-2 text-sm">
+            <select class="rounded-lg border px-2 py-1" @bind="pageSize">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="25">25</option>
+            </select>
+            <span>entries per page</span>
+        </div>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg border">
+        <table class="w-full text-sm">
+            <thead class="bg-neutral-50 text-xs uppercase">
+                <tr>
+                    <th class="cursor-pointer px-4 py-3" @onclick="() => Sort(nameof(Product.Name))">Name</th>
+                    <th class="cursor-pointer px-4 py-3" @onclick="() => Sort(nameof(Product.Category))">Category</th>
+                    <th class="cursor-pointer px-4 py-3" @onclick="() => Sort(nameof(Product.Brand))">Brand</th>
+                    <th class="cursor-pointer px-4 py-3" @onclick="() => Sort(nameof(Product.Price))">Price</th>
+                </tr>
+
+                <tr class="border-t bg-white">
+                    <th class="px-4 py-2">
+                        <input class="w-full rounded border px-2 py-1 text-xs" @bind="nameFilter" />
+                    </th>
+                    <th class="px-4 py-2">
+                        <input class="w-full rounded border px-2 py-1 text-xs" @bind="categoryFilter" />
+                    </th>
+                    <th class="px-4 py-2">
+                        <input class="w-full rounded border px-2 py-1 text-xs" @bind="brandFilter" />
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var p in PagedItems)
+                {
+                    <tr class="border-t hover:bg-neutral-50">
+                        <td class="px-4 py-3 font-medium">@p.Name</td>
+                        <td class="px-4 py-3">@p.Category</td>
+                        <td class="px-4 py-3">@p.Brand</td>
+                        <td class="px-4 py-3">$@p.Price</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-4 flex flex-col gap-4 text-sm sm:flex-row sm:justify-between">
+        <div>
+            Showing @(start + 1) to @(Math.Min(start + pageSize, filtered.Count)) of @filtered.Count entries
+        </div>
+
+        <div class="flex gap-1">
+            @for (int i = 1; i <= totalPages; i++)
+            {
+                <button class="rounded border px-3 py-1
+                        @(currentPage == i ? "bg-blue-600 text-white" : "hover:bg-neutral-100")"
+                        @onclick="() => currentPage = i">
+                    @i
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<Product> Items { get; set; } = [];
+
+    string globalSearch = "";
+    string nameFilter = "";
+    string categoryFilter = "";
+    string brandFilter = "";
+
+    string sortColumn = nameof(Product.Name);
+    bool asc = true;
+
+    int pageSize = 10;
+    int currentPage = 1;
+
+    List<Product> filtered => Items
+        .Where(p =>
+            (string.IsNullOrWhiteSpace(globalSearch)
+                || p.Name.Contains(globalSearch, StringComparison.OrdinalIgnoreCase)
+                || p.Brand.Contains(globalSearch, StringComparison.OrdinalIgnoreCase))
+            && p.Name.Contains(nameFilter, StringComparison.OrdinalIgnoreCase)
+            && p.Category.Contains(categoryFilter, StringComparison.OrdinalIgnoreCase)
+            && p.Brand.Contains(brandFilter, StringComparison.OrdinalIgnoreCase))
+        .OrderByDynamic(sortColumn, asc)
+        .ToList();
+
+    IEnumerable<Product> PagedItems =>
+        filtered.Skip(start).Take(pageSize);
+
+    int start => (currentPage - 1) * pageSize;
+    int totalPages => (int)Math.Ceiling(filtered.Count / (double)pageSize);
+
+    void Sort(string col)
+    {
+        if (sortColumn == col)
+            asc = !asc;
+        else
+        {
+            sortColumn = col;
+            asc = true;
+        }
+    }
+}

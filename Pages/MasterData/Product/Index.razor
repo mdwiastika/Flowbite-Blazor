@@ -1,0 +1,18 @@
+﻿@page "/master/product"
+@using BlazorApp2.Components.Tables
+@using BlazorApp2.Services
+@using BlazorApp2.Models
+@inject ProductService ProductService
+
+<h1 class="mb-4 text-xl font-semibold">Products</h1>
+
+<ProductTable Items="products" />
+
+@code {
+    List<Product> products = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProductService.GetAllAsync();
+    }
+}
